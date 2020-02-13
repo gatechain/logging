@@ -40,6 +40,24 @@ func (l *tracingLogger) Error(msg string, keyvals ...interface{}) {
 	l.next.Error(msg, formatErrors(keyvals)...)
 }
 
+// add Debugf
+func (l *tracingLogger) Debugf(msg string, vals ...interface{}) {
+	s := fmt.Sprintf(msg, vals)
+	l.Debug(s)
+}
+
+// add Infof
+func (l *tracingLogger) Infof(msg string, vals ...interface{}) {
+	s := fmt.Sprintf(msg, vals)
+	l.Info(s)
+}
+
+// add Errorf
+func (l *tracingLogger) Errorf(msg string, vals ...interface{}) {
+	s := fmt.Sprintf(msg, vals)
+	l.Error(s)
+}
+
 func (l *tracingLogger) With(keyvals ...interface{}) Logger {
 	return &tracingLogger{next: l.next.With(formatErrors(keyvals)...)}
 }

@@ -81,3 +81,26 @@ func (l *tmLogger) Error(msg string, keyvals ...interface{}) {
 func (l *tmLogger) With(keyvals ...interface{}) Logger {
 	return &tmLogger{kitlog.With(l.srcLogger, keyvals...)}
 }
+
+// add Debugf
+func (l *tmLogger) Debugf(msg string, vals ...interface{}) {
+	s := fmt.Sprintf(msg, vals)
+	l.Debug(s)
+}
+
+// add Infof
+func (l *tmLogger) Infof(msg string, vals ...interface{}) {
+	s := fmt.Sprintf(msg, vals)
+	l.Info(s)
+}
+
+// add Errorf
+func (l *tmLogger) Errorf(msg string, vals ...interface{}) {
+	s := fmt.Sprintf(msg, vals)
+	l.Error(s)
+}
+
+// add Base
+func Base() Logger {
+	return NewTMLogger(NewSyncWriter(os.Stdout))
+}

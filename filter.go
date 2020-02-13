@@ -62,6 +62,24 @@ func (l *filter) Error(msg string, keyvals ...interface{}) {
 	l.next.Error(msg, keyvals...)
 }
 
+// add Debugf
+func (l *filter) Debugf(msg string, vals ...interface{}) {
+	s := fmt.Sprintf(msg, vals)
+	l.Debug(s)
+}
+
+// add Infof
+func (l *filter) Infof(msg string, vals ...interface{}) {
+	s := fmt.Sprintf(msg, vals)
+	l.Info(s)
+}
+
+// add Errorf
+func (l *filter) Errorf(msg string, vals ...interface{}) {
+	s := fmt.Sprintf(msg, vals)
+	l.Error(s)
+}
+
 // With implements Logger by constructing a new filter with a keyvals appended
 // to the logger.
 //

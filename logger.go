@@ -13,6 +13,11 @@ type Logger interface {
 	Error(msg string, keyvals ...interface{})
 
 	With(keyvals ...interface{}) Logger
+
+	// add
+	Debugf(msg string, vals ...interface{})
+	Infof(msg string, vals ...interface{})
+	Errorf(msg string, vals ...interface{})
 }
 
 // NewSyncWriter returns a new writer that is safe for concurrent use by
@@ -25,6 +30,19 @@ type Logger interface {
 //    interface {
 //        Fd() uintptr
 //    }
+
 func NewSyncWriter(w io.Writer) io.Writer {
 	return kitlog.NewSyncWriter(w)
+}
+
+// add SetLevel
+func SetLevel(l Logger, lvl string) (Logger, error) {
+	option, err := AllowLevel(lvl)
+	if err != nil {
+		return nil, err
+	}
+
+	nl = NewFilter(l, option)
+
+	return nl, nil
 }
