@@ -36,8 +36,21 @@ func NewSyncWriter(w io.Writer) io.Writer {
 }
 
 // add SetLevel
-func SetLevel(l Logger, lvl string) (Logger, error) {
-	option, err := AllowLevel(lvl)
+func SetLevel(l Logger, lvl uint32) (Logger, error) {
+
+	// algorand log level : *Panic,Fatal,Error,Warn,Info,Debug*
+	var ls string
+	if lvl == 2 { //error
+		ls = "error"
+	} else if lvl == 4 { // Info
+		ls = "info"
+	} else if lvl == 5 { // debug
+		ls = "debug"
+	} else {
+		ls = "none"
+	}
+
+	option, err := AllowLevel(ls)
 	if err != nil {
 		return nil, err
 	}
