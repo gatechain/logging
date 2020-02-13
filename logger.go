@@ -18,6 +18,8 @@ type Logger interface {
 	Debugf(msg string, vals ...interface{})
 	Infof(msg string, vals ...interface{})
 	Errorf(msg string, vals ...interface{})
+	Event(category string, identifier string)
+	EventWithDetails(category string, identifier string, details interface{})
 }
 
 // NewSyncWriter returns a new writer that is safe for concurrent use by

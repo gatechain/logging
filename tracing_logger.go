@@ -58,6 +58,16 @@ func (l *tracingLogger) Errorf(msg string, vals ...interface{}) {
 	l.Error(s)
 }
 
+// add event
+func (l *tracingLogger) Event(category string, identifier string) {
+	l.EventWithDetails(category, identifier, nil)
+}
+
+// add EventWithDetails
+func (l *tracingLogger) EventWithDetails(category string, identifier string, details interface{}) {
+	//TODO
+}
+
 func (l *tracingLogger) With(keyvals ...interface{}) Logger {
 	return &tracingLogger{next: l.next.With(formatErrors(keyvals)...)}
 }

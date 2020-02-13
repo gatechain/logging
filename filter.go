@@ -80,6 +80,16 @@ func (l *filter) Errorf(msg string, vals ...interface{}) {
 	l.Error(s)
 }
 
+// add event
+func (l *filter) Event(category string, identifier string) {
+	l.EventWithDetails(category, identifier, nil)
+}
+
+// add EventWithDetails
+func (l *filter) EventWithDetails(category string, identifier string, details interface{}) {
+	//TODO
+}
+
 // With implements Logger by constructing a new filter with a keyvals appended
 // to the logger.
 //

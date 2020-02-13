@@ -104,3 +104,13 @@ func (l *tmLogger) Errorf(msg string, vals ...interface{}) {
 func Base() Logger {
 	return NewTMLogger(NewSyncWriter(os.Stdout))
 }
+
+// add event
+func (l *tmLogger) Event(category string, identifier string) {
+	l.EventWithDetails(category, identifier, nil)
+}
+
+// add EventWithDetails
+func (l *tmLogger) EventWithDetails(category string, identifier string, details interface{}) {
+	//TODO
+}
