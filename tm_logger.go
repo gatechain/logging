@@ -19,12 +19,12 @@ type tmLogger struct {
 }
 
 // Interface assertions
-var _ Logger = (*tmLogger)(nil)
+var _ TmLogger = (*tmLogger)(nil)
 
 // NewTMTermLogger returns a logger that encodes msg and keyvals to the Writer
 // using go-kit's log as an underlying logger and our custom formatter. Note
 // that underlying logger could be swapped with something else.
-func NewTMLogger(w io.Writer) Logger {
+func NewTMLogger(w io.Writer) TmLogger {
 	// Color by level value
 	colorFn := func(keyvals ...interface{}) term.FgBgColor {
 		if keyvals[0] != kitlevel.Key() {
@@ -45,7 +45,7 @@ func NewTMLogger(w io.Writer) Logger {
 
 // NewTMLoggerWithColorFn allows you to provide your own color function. See
 // NewTMLogger for documentation.
-func NewTMLoggerWithColorFn(w io.Writer, colorFn func(keyvals ...interface{}) term.FgBgColor) Logger {
+func NewTMLoggerWithColorFn(w io.Writer, colorFn func(keyvals ...interface{}) term.FgBgColor) TmLogger {
 	return &tmLogger{term.NewLogger(w, NewTMFmtLogger, colorFn)}
 }
 
@@ -78,39 +78,6 @@ func (l *tmLogger) Error(msg string, keyvals ...interface{}) {
 
 // With returns a new contextual logger with keyvals prepended to those passed
 // to calls to Info, Debug or Error.
-func (l *tmLogger) With(keyvals ...interface{}) Logger {
+func (l *tmLogger) With(keyvals ...interface{}) TmLogger {
 	return &tmLogger{kitlog.With(l.srcLogger, keyvals...)}
-}
-
-// add Debugf
-func (l *tmLogger) Debugf(msg string, vals ...interface{}) {
-	s := fmt.Sprintf(msg, vals)
-	l.Debug(s)
-}
-
-// add Infof
-func (l *tmLogger) Infof(msg string, vals ...interface{}) {
-	s := fmt.Sprintf(msg, vals)
-	l.Info(s)
-}
-
-// add Errorf
-func (l *tmLogger) Errorf(msg string, vals ...interface{}) {
-	s := fmt.Sprintf(msg, vals)
-	l.Error(s)
-}
-
-// add Base
-func Base() Logger {
-	return NewTMLogger(NewSyncWriter(os.Stdout))
-}
-
-// add event
-func (l *tmLogger) Event(category string, identifier string) {
-	l.EventWithDetails(category, identifier, nil)
-}
-
-// add EventWithDetails
-func (l *tmLogger) EventWithDetails(category string, identifier string, details interface{}) {
-	//TODO
 }

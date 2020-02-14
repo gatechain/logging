@@ -28,7 +28,7 @@ func BenchmarkTMLoggerContextual(b *testing.B) {
 	benchmarkRunner(b, log.NewTMLogger(ioutil.Discard), withInfoMessage)
 }
 
-func benchmarkRunner(b *testing.B, logger log.Logger, f func(log.Logger)) {
+func benchmarkRunner(b *testing.B, logger log.TmLogger, f func(log.TmLogger)) {
 	lc := logger.With("common_key", "common_value")
 	b.ReportAllocs()
 	b.ResetTimer()
@@ -38,6 +38,6 @@ func benchmarkRunner(b *testing.B, logger log.Logger, f func(log.Logger)) {
 }
 
 var (
-	baseInfoMessage = func(logger log.Logger) { logger.Info("foo_message", "foo_key", "foo_value") }
-	withInfoMessage = func(logger log.Logger) { logger.With("a", "b").Info("c", "d", "f") }
+	baseInfoMessage = func(logger log.TmLogger) { logger.Info("foo_message", "foo_key", "foo_value") }
+	withInfoMessage = func(logger log.TmLogger) { logger.With("a", "b").Info("c", "d", "f") }
 )

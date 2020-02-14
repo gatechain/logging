@@ -10,7 +10,7 @@ import (
 
 var (
 	// reuse the same logger across all tests
-	_testingLogger Logger
+	_testingLogger TmLogger
 )
 
 // TestingLogger returns a TMLogger which writes to STDOUT if testing being run
@@ -19,7 +19,7 @@ var (
 // Note that the call to TestingLogger() must be made
 // inside a test (not in the init func) because
 // verbose flag only set at the time of testing.
-func TestingLogger() Logger {
+func TestingLogger() TmLogger {
 	return TestingLoggerWithOutput(os.Stdout)
 }
 
@@ -29,7 +29,7 @@ func TestingLogger() Logger {
 // Note that the call to TestingLoggerWithOutput(w io.Writer) must be made
 // inside a test (not in the init func) because
 // verbose flag only set at the time of testing.
-func TestingLoggerWithOutput(w io.Writer) Logger {
+func TestingLoggerWithOutput(w io.Writer) TmLogger {
 	if _testingLogger != nil {
 		return _testingLogger
 	}
@@ -45,7 +45,7 @@ func TestingLoggerWithOutput(w io.Writer) Logger {
 
 // TestingLoggerWithColorFn allow you to provide your own color function. See
 // TestingLogger for documentation.
-func TestingLoggerWithColorFn(colorFn func(keyvals ...interface{}) term.FgBgColor) Logger {
+func TestingLoggerWithColorFn(colorFn func(keyvals ...interface{}) term.FgBgColor) TmLogger {
 	if _testingLogger != nil {
 		return _testingLogger
 	}

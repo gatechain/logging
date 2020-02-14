@@ -25,7 +25,7 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/gatechain/go-deadlock"
+	"github.com/algorand/go-deadlock"
 )
 
 // CyclicFileWriter implements the io.Writer interface and wraps an underlying file.

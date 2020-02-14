@@ -11,7 +11,7 @@ const (
 )
 
 type filter struct {
-	next             Logger
+	next             TmTmLogger
 	allowed          level            // XOR'd levels for default case
 	initiallyAllowed level            // XOR'd levels for initial case
 	allowedKeyvals   map[keyval]level // When key-value match, use this level
@@ -26,7 +26,7 @@ type keyval struct {
 // Option functions for a detailed description of how to configure levels. If
 // no options are provided, all leveled log events created with Debug, Info or
 // Error helper methods are squelched.
-func NewFilter(next Logger, options ...Option) Logger {
+func NewFilter(next TmLogger, options ...Option) TmLogger {
 	l := &filter{
 		next:           next,
 		allowedKeyvals: make(map[keyval]level),
@@ -62,35 +62,7 @@ func (l *filter) Error(msg string, keyvals ...interface{}) {
 	l.next.Error(msg, keyvals...)
 }
 
-// add Debugf
-func (l *filter) Debugf(msg string, vals ...interface{}) {
-	s := fmt.Sprintf(msg, vals)
-	l.Debug(s)
-}
-
-// add Infof
-func (l *filter) Infof(msg string, vals ...interface{}) {
-	s := fmt.Sprintf(msg, vals)
-	l.Info(s)
-}
-
-// add Errorf
-func (l *filter) Errorf(msg string, vals ...interface{}) {
-	s := fmt.Sprintf(msg, vals)
-	l.Error(s)
-}
-
-// add event
-func (l *filter) Event(category string, identifier string) {
-	l.EventWithDetails(category, identifier, nil)
-}
-
-// add EventWithDetails
-func (l *filter) EventWithDetails(category string, identifier string, details interface{}) {
-	//TODO
-}
-
-// With implements Logger by constructing a new filter with a keyvals appended
+// With implements TmLogger by constructing a new filter with a keyvals appended
 // to the logger.
 //
 // If custom level was set for a keyval pair using one of the
@@ -109,7 +81,7 @@ func (l *filter) EventWithDetails(category string, identifier string, details in
 // 				log.AllowError(),
 // 				log.AllowInfoWith("module", "crypto"), log.AllowNoneWith("user", "Sam"))
 //		 logger.With("user", "Sam").With("module", "crypto").Info("Hello") # produces "I... Hello module=crypto user=Sam"
-func (l *filter) With(keyvals ...interface{}) Logger {
+func (l *filter) With(keyvals ...interface{}) TmLogger {
 	keyInAllowedKeyvals := false
 
 	for i := len(keyvals) - 2; i >= 0; i -= 2 {

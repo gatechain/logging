@@ -1,1 +1,1 @@
-## gatechain logging
+## GateChain logging

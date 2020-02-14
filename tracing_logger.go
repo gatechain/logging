@@ -13,7 +13,7 @@ import (
 // interface.
 //
 // For debugging purposes only as it doubles the amount of allocations.
-func NewTracingLogger(next Logger) Logger {
+func NewTracingLogger(next Logger) TmLogger {
 	return &tracingLogger{
 		next: next,
 	}
@@ -25,7 +25,7 @@ type stackTracer interface {
 }
 
 type tracingLogger struct {
-	next Logger
+	next TmLogger
 }
 
 func (l *tracingLogger) Info(msg string, keyvals ...interface{}) {
@@ -40,35 +40,7 @@ func (l *tracingLogger) Error(msg string, keyvals ...interface{}) {
 	l.next.Error(msg, formatErrors(keyvals)...)
 }
 
-// add Debugf
-func (l *tracingLogger) Debugf(msg string, vals ...interface{}) {
-	s := fmt.Sprintf(msg, vals)
-	l.Debug(s)
-}
-
-// add Infof
-func (l *tracingLogger) Infof(msg string, vals ...interface{}) {
-	s := fmt.Sprintf(msg, vals)
-	l.Info(s)
-}
-
-// add Errorf
-func (l *tracingLogger) Errorf(msg string, vals ...interface{}) {
-	s := fmt.Sprintf(msg, vals)
-	l.Error(s)
-}
-
-// add event
-func (l *tracingLogger) Event(category string, identifier string) {
-	l.EventWithDetails(category, identifier, nil)
-}
-
-// add EventWithDetails
-func (l *tracingLogger) EventWithDetails(category string, identifier string, details interface{}) {
-	//TODO
-}
-
-func (l *tracingLogger) With(keyvals ...interface{}) Logger {
+func (l *tracingLogger) With(keyvals ...interface{}) TmLogger {
 	return &tracingLogger{next: l.next.With(formatErrors(keyvals)...)}
 }
 
