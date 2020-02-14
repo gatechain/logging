@@ -19,14 +19,13 @@ package logging
 import (
 	"archive/tar"
 	"compress/gzip"
-	"fmt"
+	//	"fmt"
 	"io"
 	"os"
 	"path"
 	"path/filepath"
-	"sync"
-
-	"github.com/algorand/go-algorand/util/s3"
+	//	"sync"
+	//	"github.com/gatechain/gatemint/util/s3"
 )
 
 // CollectAndUploadData combines all of the data files that we want packaged up and uploaded
@@ -34,43 +33,43 @@ import (
 // dataDir: the node's data directory containing the files of interest
 // bundleFilename: the name of the resulting tarball on S3
 // targetFolder: the subfolder in the s3 bucket to store the file
-func CollectAndUploadData(dataDir string, bundleFilename string, targetFolder string) <-chan error {
-	errorChannel := make(chan error, 1)
-	pipeReader, pipeWriter := io.Pipe()
-	go func() {
-		// Close the error channel to signal completion
-		defer close(errorChannel)
-
-		bucket := s3.GetS3UploadBucket()
-		s3Session, err := s3.MakeS3SessionForUploadWithBucket(bucket)
-		if err != nil {
-			errorChannel <- err
-			return
-		}
-		wg := sync.WaitGroup{}
-		wg.Add(1)
-		targetFilename := filepath.Join(targetFolder, path.Base(bundleFilename))
-		go func() {
-			fmt.Printf("Uploading to s3://%s/%s\n", bucket, targetFilename)
-			err = s3Session.UploadFileStream(targetFilename, pipeReader)
-			if err != nil {
-				errorChannel <- err
-			}
-			pipeReader.Close()
-			wg.Done()
-		}()
-
-		err = collectAndWrite(dataDir, pipeWriter)
-		if err != nil {
-			errorChannel <- err
-		}
-		// Close writer (our source) so reader knows there's no more data
-		pipeWriter.Close()
-		// Now wait for reader (S3 uploader) to finish uploading
-		wg.Wait()
-	}()
-	return errorChannel
-}
+//func CollectAndUploadData(dataDir string, bundleFilename string, targetFolder string) <-chan error {
+//	errorChannel := make(chan error, 1)
+//	pipeReader, pipeWriter := io.Pipe()
+//	go func() {
+//		// Close the error channel to signal completion
+//		defer close(errorChannel)
+//
+//		bucket := s3.GetS3UploadBucket()
+//		s3Session, err := s3.MakeS3SessionForUploadWithBucket(bucket)
+//		if err != nil {
+//			errorChannel <- err
+//			return
+//		}
+//		wg := sync.WaitGroup{}
+//		wg.Add(1)
+//		targetFilename := filepath.Join(targetFolder, path.Base(bundleFilename))
+//		go func() {
+//			fmt.Printf("Uploading to s3://%s/%s\n", bucket, targetFilename)
+//			err = s3Session.UploadFileStream(targetFilename, pipeReader)
+//			if err != nil {
+//				errorChannel <- err
+//			}
+//			pipeReader.Close()
+//			wg.Done()
+//		}()
+//
+//		err = collectAndWrite(dataDir, pipeWriter)
+//		if err != nil {
+//			errorChannel <- err
+//		}
+//		// Close writer (our source) so reader knows there's no more data
+//		pipeWriter.Close()
+//		// Now wait for reader (S3 uploader) to finish uploading
+//		wg.Wait()
+//	}()
+//	return errorChannel
+//}
 
 func collectAndWrite(datadir string, writer io.Writer) error {
 	// set up the gzip writer

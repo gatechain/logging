@@ -27,7 +27,7 @@ import (
 	"github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
 
-	"github.com/algorand/go-algorand/config"
+	//"github.com/gatechain/gatemint/config"
 	"github.com/gatechain/logging/telemetryspec"
 )
 
@@ -88,37 +88,37 @@ func makeTelemetryState(cfg TelemetryConfig, hookFactory hookFactory) (*telemetr
 }
 
 // ReadTelemetryConfigOrDefault reads telemetry config from file or defaults if no config file found.
-func ReadTelemetryConfigOrDefault(dataDir *string, genesisID string) (cfg TelemetryConfig, err error) {
-	err = nil
-	if dataDir != nil && *dataDir != "" {
-		configPath := filepath.Join(*dataDir, TelemetryConfigFilename)
-		cfg, err = LoadTelemetryConfig(configPath)
-	}
-	if err != nil && os.IsNotExist(err) {
-		var configPath string
-		configPath, err = config.GetConfigFilePath(TelemetryConfigFilename)
-		if err != nil {
-			cfg = createTelemetryConfig()
-			return
-		}
-		cfg, err = LoadTelemetryConfig(configPath)
-	}
-	if err != nil {
-		cfg = createTelemetryConfig()
-		if os.IsNotExist(err) {
-			err = nil
-		} else {
-			return
-		}
-	}
-	ch := config.GetCurrentVersion().Channel
-	// Should not happen, but default to "dev" if channel is unspecified.
-	if ch == "" {
-		ch = "dev"
-	}
-	cfg.ChainID = fmt.Sprintf("%s-%s", ch, genesisID)
-	return cfg, err
-}
+//func ReadTelemetryConfigOrDefault(dataDir *string, genesisID string) (cfg TelemetryConfig, err error) {
+//	err = nil
+//	if dataDir != nil && *dataDir != "" {
+//		configPath := filepath.Join(*dataDir, TelemetryConfigFilename)
+//		cfg, err = LoadTelemetryConfig(configPath)
+//	}
+//	if err != nil && os.IsNotExist(err) {
+//		var configPath string
+//		configPath, err = config.GetConfigFilePath(TelemetryConfigFilename)
+//		if err != nil {
+//			cfg = createTelemetryConfig()
+//			return
+//		}
+//		cfg, err = LoadTelemetryConfig(configPath)
+//	}
+//	if err != nil {
+//		cfg = createTelemetryConfig()
+//		if os.IsNotExist(err) {
+//			err = nil
+//		} else {
+//			return
+//		}
+//	}
+//	ch := config.GetCurrentVersion().Channel
+//	// Should not happen, but default to "dev" if channel is unspecified.
+//	if ch == "" {
+//		ch = "dev"
+//	}
+//	cfg.ChainID = fmt.Sprintf("%s-%s", ch, genesisID)
+//	return cfg, err
+//}
 
 // EnsureTelemetryConfig creates a new TelemetryConfig structure with a generated GUID and the appropriate Telemetry endpoint
 // Err will be non-nil if the file doesn't exist, or if error loading.
@@ -143,7 +143,8 @@ func EnsureTelemetryConfigCreated(dataDir *string, genesisID string) (TelemetryC
 		}
 	}
 	if configPath == "" {
-		configPath, err = config.GetConfigFilePath(TelemetryConfigFilename)
+		//configPath, err = config.GetConfigFilePath(TelemetryConfigFilename)
+		configPath = ConfigPath
 		if err != nil {
 			cfg := createTelemetryConfig()
 			initializeConfig(cfg)
@@ -162,12 +163,12 @@ func EnsureTelemetryConfigCreated(dataDir *string, genesisID string) (TelemetryC
 		err = cfg.Save(configPath)
 	}
 
-	ch := config.GetCurrentVersion().Channel
+	//ch := config.GetCurrentVersion().Channel
 	// Should not happen, but default to "dev" if channel is unspecified.
-	if ch == "" {
-		ch = "dev"
+	if Channel == "" {
+		Channel = "dev"
 	}
-	cfg.ChainID = fmt.Sprintf("%s-%s", ch, genesisID)
+	cfg.ChainID = fmt.Sprintf("%s-%s", Channel, genesisID)
 
 	initializeConfig(cfg)
 	return cfg, created, err

@@ -22,11 +22,28 @@ import (
 	"github.com/olivere/elastic"
 	"github.com/sirupsen/logrus"
 	"gopkg.in/sohlich/elogrus.v3"
-
-	"github.com/algorand/go-algorand/util/metrics"
+	//"github.com/gatechain/gatemint/util/metrics"
 )
 
-var telemetryDrops = metrics.MakeCounter(metrics.MetricName{Name: "algod_telemetry_drops_total", Description: "telemetry messages not sent to server"})
+type Inc interface {
+	Inc(labels map[string]string)
+}
+
+var (
+	MetricName        = "algod_telemetry_drops_total"
+	MetricDescription = "telemetry messages not sent to server"
+)
+
+//var telemetryDrops = metrics.MakeCounter(metrics.MetricName{Name: "algod_telemetry_drops_total", Description: "telemetry messages not sent to server"})
+//var telemetryDrops Inc
+//
+//var onceM sync.Once
+//
+//func InitMetricCounter(mc Inc) {
+//	onceM.Do(func() {
+//		telemetryDrops = mc
+//	})
+//}
 
 func createAsyncHook(wrappedHook logrus.Hook, channelDepth uint, maxQueueDepth int) *asyncTelemetryHook {
 	return createAsyncHookLevels(wrappedHook, channelDepth, maxQueueDepth, makeLevels(logrus.InfoLevel))
@@ -132,7 +149,8 @@ func (hook *asyncTelemetryHook) Fire(entry *logrus.Entry) error {
 		// queue is full, don't block, drop message.
 
 		// metrics is a different mechanism that will never block
-		telemetryDrops.Inc(nil)
+		//telemetryDrops.Inc(nil)
+		MC.Inc(nil)
 	}
 	return nil
 }

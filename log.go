@@ -53,6 +53,11 @@ type Level uint32
 var (
 	baseLogger      Logger
 	telemetryConfig TelemetryConfig
+
+	Channel       string
+	ConfigPath    string
+	DataDirectory string
+	MC            Inc
 )
 
 const (

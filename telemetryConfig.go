@@ -26,8 +26,7 @@ import (
 
 	"github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
-
-	"github.com/algorand/go-algorand/config"
+	//"github.com/gatechain/gatemint/config"
 )
 
 // TelemetryConfigFilename default file name for telemetry config "logging.config"
@@ -101,7 +100,8 @@ func (cfg TelemetryConfig) getHostName() string {
 
 // getInstanceName allows us to distinguish between multiple instances running on the same node.
 func (cfg TelemetryConfig) getInstanceName() string {
-	p := config.GetCurrentVersion().DataDirectory
+	//p := config.GetCurrentVersion().DataDirectory
+	p := DataDirectory
 	hash := sha256.New()
 	hash.Write([]byte(cfg.GUID))
 	hash.Write([]byte(p))

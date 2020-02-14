@@ -13,7 +13,7 @@ import (
 // interface.
 //
 // For debugging purposes only as it doubles the amount of allocations.
-func NewTracingLogger(next Logger) TmLogger {
+func NewTracingLogger(next TmLogger) TmLogger {
 	return &tracingLogger{
 		next: next,
 	}

@@ -15,7 +15,7 @@
 // along with go-algorand.  If not, see <https://www.gnu.org/licenses/>.
 
 // Package logspec specifies the data format of event log statements.
-package loggingspec
+package logspec
 
 import (
 	"encoding/json"

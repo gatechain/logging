@@ -11,7 +11,7 @@ const (
 )
 
 type filter struct {
-	next             TmTmLogger
+	next             TmLogger
 	allowed          level            // XOR'd levels for default case
 	initiallyAllowed level            // XOR'd levels for initial case
 	allowedKeyvals   map[keyval]level // When key-value match, use this level
