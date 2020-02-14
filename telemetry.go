@@ -233,3 +233,10 @@ func (t *telemetryState) Close() {
 func (t *telemetryState) Flush() {
 	t.hook.Flush()
 }
+
+func InitTelemetry(mc Inc, channel, configPath, dataDirectory string) {
+	Channel = channel
+	ConfigPath = configPath
+	DataDirectory = dataDirectory
+	MC = mc
+}
