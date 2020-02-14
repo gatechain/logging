@@ -43,7 +43,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	"github.com/algorand/go-algorand/logging/telemetryspec"
+	"github.com/gatechain/logging/telemetryspec"
 )
 
 // Level refers to the log logging level

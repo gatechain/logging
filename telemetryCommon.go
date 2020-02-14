@@ -20,10 +20,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/algorand/go-deadlock"
+	"github.com/gatechain/go-deadlock"
 	"github.com/sirupsen/logrus"
 
-	"github.com/algorand/go-algorand/logging/telemetryspec"
+	"github.com/gatechain/logging/telemetryspec"
 )
 
 // TelemetryOperation wraps the context for an ongoing telemetry.StartOperation call

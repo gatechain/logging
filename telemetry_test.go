@@ -21,11 +21,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/algorand/go-deadlock"
+	"github.com/gatechain/go-deadlock"
 	"github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/require"
 
-	"github.com/algorand/go-algorand/logging/telemetryspec"
+	"github.com/gatechain/logging/telemetryspec"
 )
 
 type mockTelemetryHook struct {

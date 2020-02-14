@@ -28,7 +28,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"github.com/algorand/go-algorand/config"
-	"github.com/algorand/go-algorand/logging/telemetryspec"
+	"github.com/gatechain/logging/telemetryspec"
 )
 
 const telemetryPrefix = "/"
