@@ -35,11 +35,14 @@ logger.Info("New wallet was created")
 package logging
 
 import (
+	"fmt"
 	"io"
+	"os"
 	"runtime"
 	"runtime/debug"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/sirupsen/logrus"
 
@@ -358,15 +361,19 @@ func Base() Logger {
 // NewLogger returns a new Logger logging to out.
 func NewLogger() Logger {
 	l := logrus.New()
+
+	l.SetReportCaller(true)
+	l.SetFormatter(&UserDefinedFormatter{})
+
 	out := logger{
 		logrus.NewEntry(l),
 		&loggerState{},
 	}
-	formatter := out.entry.Logger.Formatter
-	tf, ok := formatter.(*logrus.TextFormatter)
-	if ok {
-		tf.TimestampFormat = "2006-01-02T15:04:05.000000 -0700"
-	}
+	//formatter := out.entry.Logger.Formatter
+	//tf, ok := formatter.(*logrus.TextFormatter)
+	//if ok {
+	//	tf.TimestampFormat = "2006-01-02T15:04:05.000000 -0700"
+	//}
 	return out
 }
 
@@ -438,4 +445,54 @@ func (l logger) FlushTelemetry() {
 	if l.loggerState.telemetry != nil {
 		l.loggerState.telemetry.Flush()
 	}
+}
+
+// add
+func NewTMLogger(w io.Writer) Logger {
+	l := NewLogger()
+	l.SetOutput(w)
+	return l
+}
+
+func NewSyncWriter(w io.Writer) io.Writer {
+	return w
+}
+
+type UserDefinedFormatter struct{}
+
+func (f *UserDefinedFormatter) Format(entry *logrus.Entry) ([]byte, error) {
+	timestamp := time.Now().Format(time.RFC3339)
+	hostname, err := os.Hostname()
+	if err != nil {
+		return nil, err
+	}
+
+	var s string
+	var function interface{} = nil
+	var line interface{} = nil
+	var file interface{} = nil
+	function, _ = entry.Data["function"]
+	line, _ = entry.Data["line"]
+	file, _ = entry.Data["file"]
+	if function != "" {
+		s = fmt.Sprintf("%s %s %d %s %s:%d %s: %s | %s\n", timestamp, hostname, os.Getpid(), strings.ToUpper(entry.Level.String()), file, line, function, entry.Message, formatterFields(entry.Data))
+	} else {
+		s = fmt.Sprintf("%s %s %d %s: %s | %s\n", timestamp, hostname, os.Getpid(), strings.ToUpper(entry.Level.String()), entry.Message, formatterFields(entry.Data))
+	}
+
+	return []byte(s), nil
+}
+
+func formatterFields(fields logrus.Fields) string {
+
+	var s string
+
+	for k, v := range fields {
+		if k == "function" || k == "line" || k == "file" {
+			continue
+		}
+		s = fmt.Sprintf("%s %s=%v", s, k, v)
+	}
+
+	return s
 }
