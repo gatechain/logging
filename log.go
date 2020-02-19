@@ -496,3 +496,22 @@ func formatterFields(fields logrus.Fields) string {
 
 	return s
 }
+
+func NewLevel(s string) Level {
+	//debug/info/warn/error/fatal/panic
+	if s == "debug" {
+		return Debug
+	} else if s == "info" {
+		return Info
+	} else if s == "warn" {
+		return Warn
+	} else if s == "error" {
+		return Error
+	} else if s == "fatal" {
+		return Fatal
+	} else if s == "panic" {
+		return Panic
+	} else {
+		return Info
+	}
+}
