@@ -63,8 +63,8 @@ func createTelemetryConfig() TelemetryConfig {
 		URI:                "",
 		MinLogLevel:        logrus.WarnLevel,
 		ReportHistoryLevel: logrus.WarnLevel,
-		UserName:           "telemetry-v9",
-		Password:           "oq%$FA1TOJ!yYeMEcJ7D688eEOE#MGCu",
+		UserName:           "telemetry-test",
+		Password:           "",
 	}
 }
 
